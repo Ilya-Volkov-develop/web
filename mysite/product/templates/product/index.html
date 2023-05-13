@@ -1,0 +1,86 @@
+{% extends 'home/top_menu.html' %}
+{% block content %}
+
+</br>
+<div class="container">
+    <a href="{% url 'Product_type_create_url' %}" class="btn btn-success">Создание записи</a>
+  </br>
+  </br>
+    <form method="GET" >
+      <div class="input-field">
+        <h2>Поиск по названию</h2>
+          <input type="text" name="q" value="{{ request.GET.q }}" placeholder="Напишите ключевое слово">
+         <button class="btn btn-success" type="submit" name="action">Поиск</button>
+      </div>
+  </form>
+</div>
+
+  {% for product_type in product_types %}
+</br>
+<div class="container">
+    <div class="card" style="width: 18rem;">
+        <img src="https://ucare.timepad.ru/f9f7d38f-a376-4a19-8aca-1b3d9386935f/poster_event_1427504.jpg" class="card-img-top" alt="...">
+        <div class="card-body">
+          <h5 class="card-title">{{ product_type.title }}</h5>
+          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+          <a href="{% url 'Product_type_update_url' pk=product_type.id %}" class="btn btn-warning">Обновить запись</a>
+          <a href="{% url 'Product_type_delete_url' pk=product_type.id %}"  class="btn btn-danger">Delete</a>
+        </div>
+      </div>
+  </div>
+
+  
+  {% endfor %}
+</br>
+  <div class="container">
+
+<div class="container">
+  <nav aria-label="Page navigation example">
+      <ul class="pagination">
+        {% if product_types.has_previous %}
+        <li class="page-item ">
+          <a class="page-link" href="?page={{ n }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Назад</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" aria-label="Previous">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Назад</span>
+          </a>
+        </li>
+        {% endif %}
+        {% for n in product_types.paginator.page_range %}
+        {% if product_types.number == n %}
+        <li class="page-item active">
+          <a class="page-link" href="?page={{ n }}">{{ n }} <span class="sr-only"></span></a>
+        </li>
+       {% elif n > product_types.number|add:-3 and n < product_types.number|add:3%}
+        <li class="page-item"><a class="page-link"
+           href="?page={{ n }}{% if request.GET.q %}&q={{ request.GET.q }}
+           {% endif %}">
+           {{ n }} 
+          </a></li>
+        {% endif %}
+        {% endfor %}
+        {% if product_types.has_next %}
+        <li class="page-item">
+          <a class="page-link" href="?page={{ product_types.next_page_number }}
+          {% if request.GET.q %}&q={{ request.GET.q }}{% endif %}" aria-label="Previous">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Вперед</span>
+          </a>
+        </li>
+        {% else %}
+        <li class="page-item disabled">
+          <a class="page-link" aria-label="Previous">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Вперед</span>
+          </a>
+        </li>
+        {% endif %}
+    </nav>
+</div>
+{% endblock %}
